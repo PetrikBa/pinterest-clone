@@ -55,10 +55,12 @@ const items = [
 ];
 
 const Gallery = () => {
+    const baseUrl = import.meta.env.BASE_URL;
+
     return (    
         <div className="gallery">
             {items.map((item)=>(
-                <GalleryItem key={item.id} item={item}/>
+                <GalleryItem key={item.id} item={{ ...item, media: `${baseUrl}${item.media.replace(/^\//, '')}` }}/>
             ))}
         </div>
     );
