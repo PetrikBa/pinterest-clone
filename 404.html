@@ -14,11 +14,6 @@
           ? pathname.slice(repoBase.length)
           : pathname;
 
-        if (appPath === '/post' || appPath === '/post/') {
-          window.location.replace(repoBase + '/#/post');
-          return;
-        }
-
         if (!appPath || appPath === '/') {
           window.location.replace(repoBase + '/#/');
           return;
