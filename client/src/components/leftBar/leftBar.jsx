@@ -21,7 +21,7 @@ const LeftBar = () => {
                 </a>
             </div>
             <a href="/">
-                <img src="/general/messages.svg" alt="" />
+                <img src="/general/settings.svg" alt="" />
             </a>
         </div>
     );
