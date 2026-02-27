@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      (function () {
+        var repoBase = '/pinterest-clone';
+        var pathname = window.location.pathname;
+        var search = window.location.search || '';
+        var hash = window.location.hash || '';
+
+        var appPath = pathname.startsWith(repoBase)
+          ? pathname.slice(repoBase.length)
+          : pathname;
+
+        if (!appPath || appPath === '/') {
+          window.location.replace(repoBase + '/#/');
+          return;
+        }
+
+        window.location.replace(repoBase + '/#' + appPath + search + hash);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
