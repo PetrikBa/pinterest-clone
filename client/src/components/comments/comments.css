@@ -1,0 +1,104 @@
+.comments {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+}
+
+.commentList {
+    display: flex;
+    flex: 1;
+    gap: 16px;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.comment {
+    display: flex;
+    gap: 16px;
+}
+
+.comment img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.commentContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.commentUsername {
+    font-weight: 500;
+    font-size: 14px;
+}   
+
+.commentText {
+    font-size: 14px;
+}
+
+.commentTime {
+    font-size: 12px;
+    color: #888;    
+}
+
+.commentForm {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    background-color: #f1f1f1;
+    padding: 16px;
+    border-radius: 32px;
+}
+
+.commentForm input { 
+    flex: 1;
+    border: none;
+    background-color: transparent;
+    font-size: 16px;
+    outline: none;
+}
+
+.emoji {
+    position: relative;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.emojiButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: #444;
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+}
+
+.emoji button {
+    border: none;
+}
+
+.emojiButton.isOpen {
+    background-color: #E5B020;
+    transition: background-color 0.3s ease;
+}
+
+.emojiButton svg {
+    width: 22px;
+    height: 22px;
+}
+
+.emojiPicker {
+    position: absolute;
+    right: 0;
+    bottom: 50px;
+}
