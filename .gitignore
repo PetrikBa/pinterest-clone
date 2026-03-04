@@ -2,6 +2,7 @@
 .env
 .env.local
 .env.production
+*.local
 
 # Dependencies
 node_modules/
@@ -52,4 +53,5 @@ Thumbs.db
 
 # Build outputs  
 dist/
+dist-ssr/
 build/
