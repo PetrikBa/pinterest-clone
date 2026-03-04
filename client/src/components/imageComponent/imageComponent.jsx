@@ -1,11 +1,11 @@
 import { Image } from '@imagekit/react';        
 
-const ImageComponent = ({path,alt,className,w,h, ...props}) => {
+const ImageComponent = ({path,src,alt,className,w,h, ...props}) => {
     
     return (
         <Image
             urlEndpoint={import.meta.env.VITE_URL_IK_ENDPOINT}
-            src={path}
+            src={src || path}
             alt={alt}
             transformation={[
                 {   width: w,

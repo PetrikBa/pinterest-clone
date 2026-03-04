@@ -5,10 +5,12 @@ import boardRouter from './routes/board.routes.js'
 import pinRouter from './routes/pin.routes.js'
 import commentRouter from './routes/comment.routes.js'
 import connectDB from './utils/connectDB.js'
+import cors from 'cors';
 
 const app = express();
 
 app.use(express.json());
+app.use(cors({ origin: process.env.CLIENT_URL}));
 
 const port = process.env.PORT || 3000;
 
