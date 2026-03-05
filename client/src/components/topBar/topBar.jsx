@@ -10,7 +10,7 @@ const TopBar = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        navigate(`/search?q=${e.target[0].value}`);
+        navigate(`/search?search=${e.target[0].value}`);
     }
 
     return (    

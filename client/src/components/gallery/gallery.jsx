@@ -4,22 +4,23 @@ import axios from 'axios';
 import GalleryItem from '../galleryItem/galleryItem.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-const items = [];
-
-const fetchPins = async ({ pageParam, search }) => {
-    const res = await axios.get(
-        `${import.meta.env.VITE_API_ENDPOINT}/pins?cursor=${
-            pageParam
-        }&search=${search || ''}`
-    );
+const fetchPins = async ({ pageParam, search, userId, boardId }) => {
+    const res = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}/pins`, {
+        params: {
+            cursor: pageParam,
+            search: (search || '').trim(),
+            userId: (userId || '').trim(),
+            boardId: (boardId || '').trim(),
+        },
+    });
     return res.data;
 }
 
-const Gallery = ({search}) => {
+const Gallery = ({search, userId, boardId}) => {
     
     const {data, fetchNextPage, hasNextPage, status} = useInfiniteQuery({ 
-        queryKey: ['pins',search], 
-        queryFn: ({ pageParam =0 }) => fetchPins({ pageParam, search }),
+        queryKey: ['pins', search, userId, boardId], 
+        queryFn: ({ pageParam =0 }) => fetchPins({ pageParam, search, userId, boardId }),
         initialPageParam: 0,
         getNextPageParam: (lastPage, pages) => lastPage.nextCursor, 
     });
