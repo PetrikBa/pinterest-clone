@@ -20,8 +20,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -30,16 +28,20 @@ jobs:
           cache: npm
           cache-dependency-path: client/package-lock.json
 
-      - name: Configure git author
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci || npm install
 
-      - name: Install and deploy (same as local)
+      - name: Build client for Pages
         working-directory: client
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VITE_API_ENDPOINT: https://your-backend.example.com
+          VITE_URL_IK_ENDPOINT: https://ik.imagekit.io/your_imagekit_id
         run: |
-          npm install
-          npm run deploy
+          npm run build -- --base=/pinterest-clone/
+
+      - name: Publish to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./client/dist
