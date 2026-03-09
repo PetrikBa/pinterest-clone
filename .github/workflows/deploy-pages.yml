@@ -35,8 +35,8 @@ jobs:
       - name: Build client for Pages
         working-directory: client
         env:
-          VITE_API_ENDPOINT: https://your-backend.example.com
-          VITE_URL_IK_ENDPOINT: https://ik.imagekit.io/your_imagekit_id
+          VITE_API_ENDPOINT: ${{ secrets.VITE_API_ENDPOINT }}
+          VITE_URL_IK_ENDPOINT: ${{ secrets.VITE_URL_IK_ENDPOINT }}
         run: |
           npm run build -- --base=/pinterest-clone/
 
