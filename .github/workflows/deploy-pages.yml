@@ -33,9 +33,12 @@ jobs:
           cache-dependency-path: client/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci || npm install
 
       - name: Build for GitHub Pages
+        env:
+          VITE_API_ENDPOINT: https://your-backend.example.com
+          VITE_URL_IK_ENDPOINT: https://ik.imagekit.io/your_imagekit_id
         run: npm run build -- --base=/pinterest-clone/
 
       - name: Setup Pages
