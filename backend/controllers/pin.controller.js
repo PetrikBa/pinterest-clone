@@ -26,12 +26,11 @@ export const getPins = async (req,res) => {
             .skip(pageNumber * LIMIT);
 
         const hasNextPage = pins.length === LIMIT;
-
+        
         res
             .status(200)
             .json({ pins, nextCursor: hasNextPage ? pageNumber + 1 : null });
     } catch (error) {
-        console.error('getPins error:', error);
         res.status(500).json({ message: 'Failed to fetch pins' });
     }
 }
@@ -44,7 +43,6 @@ export const getPin = async (req, res) => {
 
         res.status(200).json(pin);
     } catch (error) {
-        console.error('getPin error:', error);
         res.status(500).json({ message: 'Failed to fetch pin' });
     }
 }
