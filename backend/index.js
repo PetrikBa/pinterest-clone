@@ -44,5 +44,6 @@ app.use('/comments', commentRouter);
 
 app.listen(port, ()=>{
     connectDB();
+    console.log('CORS allowed origins:', allowedOrigins);
     console.log(`Server is running on http://localhost:${port}`);
 })
