@@ -6,11 +6,12 @@ import pinRouter from './routes/pin.routes.js'
 import commentRouter from './routes/comment.routes.js'
 import connectDB from './utils/connectDB.js'
 import cors from 'cors';
+import mongoose from 'mongoose';
 
 const app = express();
 
 const normalizeOrigin = (value = '') => value.trim().replace(/\/$/, '');
-const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
+const allowedOrigins = (process.env.CLIENT_URL || '')
     .split(',')
     .map(normalizeOrigin)
     .filter(Boolean);
@@ -32,7 +33,11 @@ app.use(express.json());
 app.use(cors(corsOptions));
 
 app.get('/health', (_req, res) => {
-    res.status(200).json({ ok: true });
+    const dbConnected = mongoose.connection.readyState === 1;
+    res.status(dbConnected ? 200 : 503).json({
+        ok: dbConnected,
+        dbState: mongoose.connection.readyState,
+    });
 });
 
 const port = process.env.PORT || 3000;
