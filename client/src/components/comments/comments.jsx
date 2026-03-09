@@ -1,5 +1,4 @@
 import './comments.css'; 
-import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import apiRequest from '../../utils/apiRequest';
 import Comment from './comment';
@@ -30,7 +29,7 @@ const Comments = ({ id }) => {
                     <Comment key={comment._id} comment={comment}/>
                 ))}
             </div>
-            <CommentForm open={openEmojiPicker} setOpen={setOpenEmojiPicker} pinId={id} />
+            <CommentForm id={id} />
         </div>
     );
 }
