@@ -17,7 +17,7 @@ const TopBar = () => {
         <div className="topBar">
             <form onSubmit={handleSubmit} className="search">
                 <Image path="general/search.svg" alt="" />
-                <input type="text" placeholder="Search" />
+                <input type="text" placeholder="Search content" />
             </form>
             {/* USER */}
             <UserButton />
