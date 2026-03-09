@@ -1,11 +1,28 @@
 import './authPage.css'; 
 import Image from '../../components/imageComponent/imageComponent';
 import { useState } from 'react';
+import apiRequest from '../../utils/apiRequest';
+import { useNavigate } from 'react-router';
 
 const AuthPage = () => {
 
     const [isRegister, setIsRegister] = useState(false);
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        
+        try {
+            const res = await apiRequest.post(`/users/auth/${isRegister ? 'register' : 'login'}`, data);
+            navigate('/');
+        } catch (error) {
+            setError(error?.response?.data?.message || error?.message || 'Registration failed');
+        }
+    }
 
     return (
         <div className="authPage">
@@ -13,13 +30,13 @@ const AuthPage = () => {
                 <Image path="/general/logo.png" />
                 <h1>{isRegister ? "Create a new account" : "Login to your account"}</h1>
                 {isRegister ? (
-                    <form key="register">
+                    <form key="register" onSubmit = {handleSubmit}>
                         <div className="formGroup">
                             <label htmlFor="username">Username</label>
                             <input 
                                 type="text" 
                                 id="username" 
-                                name="username" 
+                                name="userName" 
                                 required placeholder='Username'
                             />
                         </div>
@@ -28,7 +45,8 @@ const AuthPage = () => {
                             <input 
                                 type="text" 
                                 id="displayname" 
-                                name="displayname" 
+                                name="displayName" 
+                                required
                                 placeholder='Name'
                             />
                         </div>
@@ -59,7 +77,7 @@ const AuthPage = () => {
                         }
                     </form>
                 ) : (
-                    <form key="login">
+                    <form key="login" onSubmit = {handleSubmit}>
                     <div className="formGroup">
                         <label htmlFor="email">Email</label>
                         <input 
