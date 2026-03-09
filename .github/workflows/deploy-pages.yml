@@ -35,7 +35,7 @@ jobs:
       - name: Build client for Pages
         working-directory: client
         env:
-          VITE_API_ENDPOINT: https://pinterest-api.onrender.com
+          VITE_API_ENDPOINT: https://pinterest-clone-62zy.onrender.com
           VITE_URL_IK_ENDPOINT: https://ik.imagekit.io/mdawyaz7t
         run: |
           npm run build -- --base=/pinterest-clone/
