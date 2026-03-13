@@ -2,6 +2,14 @@ import User from "../models/user.model.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const getJwtSecret = () => {
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+        throw new Error('Server misconfiguration: JWT_SECRET is missing');
+    }
+    return secret;
+};
+
 const getCookieOptions = () => {
     const isProduction = process.env.NODE_ENV === 'production';
 
@@ -15,6 +23,7 @@ const getCookieOptions = () => {
 
 export const registerUser = async (req,res) => {
     try {
+        const jwtSecret = getJwtSecret();
         const { userName, displayName, email, password } = req.body;
 
         if (!userName || !displayName || !email || !password) {
@@ -30,7 +39,7 @@ export const registerUser = async (req,res) => {
             hashedPassword: newHashedPassword,
         });
 
-        const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET);
+        const token = jwt.sign({userId: user._id}, jwtSecret);
 
         res.cookie('token', token, getCookieOptions());
 
@@ -45,6 +54,7 @@ export const registerUser = async (req,res) => {
 
 export const loginUser = async (req,res) => {
     try {
+        const jwtSecret = getJwtSecret();
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -63,7 +73,7 @@ export const loginUser = async (req,res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET);
+        const token = jwt.sign({userId: user._id}, jwtSecret);
 
         res.cookie('token', token, getCookieOptions());
 
