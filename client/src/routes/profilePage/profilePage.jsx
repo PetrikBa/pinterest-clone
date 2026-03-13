@@ -35,12 +35,12 @@ const ProfilePage = () => {
             />
             <h1 className='profileName'>{data.displayName}</h1>
             <span className='profileUsername'>@{data.userName}</span>
-            <div className="followCounts">10 followers . 20 followings</div>
+            <div className="followCounts">{data.followersCount} followers . {data.followingCount} followings</div>
             <div className='profileInteractions'>
                 <Image path="general/share.svg" alt="Some description"/>
                 <div className='profileButtons'>
                     <button>Message</button>
-                    <button>Follow</button>
+                    <button>{data.isFollowing ? "Unfollow" : "Follow"}</button>
                 </div>
                 <Image path="general/more.svg" alt="Some description"/>
             </div>

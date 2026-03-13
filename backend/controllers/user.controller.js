@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import Follow from "../models/follow.model.js";
 
 const getJwtSecret = () => {
     const secret = process.env.JWT_SECRET;
@@ -103,9 +104,61 @@ export const getUser = async (req,res) => {
 
         const {hashedPassword, ...detailsWithoutPassword} = user.toObject();
 
-        res.status(200).json(detailsWithoutPassword);
+        const followersCount = await Follow.countDocuments({ following: user._id });
+        const followingCount = await Follow.countDocuments({ follower: user._id });
+
+        let isFollowing = false;
+        const token = req.cookies.token;
+        const jwtSecret = process.env.JWT_SECRET;
+
+        if (token && jwtSecret) {
+            try {
+                const payload = jwt.verify(token, jwtSecret);
+                isFollowing = !!(await Follow.exists({
+                    follower: payload.userId,
+                    following: user._id
+                }));
+            } catch (_) {
+                // invalid/expired token — treat as logged out
+            }
+        }
+
+        res.status(200).json({
+            ...detailsWithoutPassword,
+            followersCount,
+            followingCount,
+            isFollowing,
+        });
     } catch (err) {
         console.error('getUser error:', err);
         res.status(500).json({ message: err.message });
     }
+}
+
+export const followUser = async (req,res) => { 
+    
+    const {userName} = req.params;
+
+    const user = await User.findOne({userName});
+
+    const isFollowing = await Follow.exists({ 
+        follower: req.userId, 
+        following: user._id 
+    });
+
+    if(isFollowing) {
+        await Follow.deleteOne({ 
+            follower: req.userId, 
+            following: user._id 
+        });
+    } else {
+        await Follow.create({ 
+            follower: req.userId, 
+            following: user._id 
+        });
+    }
+
+    const {hashedPassword, ...detailsWithoutPassword} = user.toObject();
+
+    res.status(200).json("Successfully toggled follow status");    
 }

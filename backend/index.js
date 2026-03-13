@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import 'dotenv/config'
 import express from 'express'
 import userRouter from './routes/user.routes.js'
 import boardRouter from './routes/board.routes.js'
@@ -10,18 +8,6 @@ import connectDB from './utils/connectDB.js'
 import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load backend/.env regardless of process cwd.
-dotenv.config({ path: path.join(__dirname, '.env') });
-
-const requiredEnv = ['JWT_SECRET', 'MONGO_URL'];
-const missingEnv = requiredEnv.filter((name) => !(process.env[name] || '').trim());
-if (missingEnv.length) {
-    throw new Error(`Missing required environment variables: ${missingEnv.join(', ')}`);
-}
 
 const app = express();
 

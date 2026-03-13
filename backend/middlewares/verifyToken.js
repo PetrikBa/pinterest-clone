@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 
 export const verifyToken = (req,res,next) => {
-    const jwtSecret = (process.env.JWT_SECRET || process.env.JWT_SECRET_KEY || '').trim();
+    const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
-        return res.status(500).json({ message: "Server misconfiguration: JWT_SECRET/JWT_SECRET_KEY is missing" });
+        return res.status(500).json({ message: "Server misconfiguration: JWT_SECRET is missing" });
     }
 
     const token = req.cookies.token
