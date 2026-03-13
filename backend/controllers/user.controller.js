@@ -2,6 +2,17 @@ import User from "../models/user.model.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+const getCookieOptions = () => {
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    return {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    };
+};
+
 export const registerUser = async (req,res) => {
     try {
         const { userName, displayName, email, password } = req.body;
@@ -21,12 +32,7 @@ export const registerUser = async (req,res) => {
 
         const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET);
 
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        res.cookie('token', token, getCookieOptions());
 
         const { hashedPassword, ...detailsWithoutPassword } = user.toObject();
 
@@ -59,12 +65,7 @@ export const loginUser = async (req,res) => {
 
         const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET);
 
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        res.cookie('token', token, getCookieOptions());
 
         const { hashedPassword, ...detailsWithoutPassword } = user.toObject();
 
@@ -76,7 +77,8 @@ export const loginUser = async (req,res) => {
 }
 
 export const logoutUser = async (req,res) => {
-    res.clearCookie('token');
+    const { maxAge, ...clearCookieOptions } = getCookieOptions();
+    res.clearCookie('token', clearCookieOptions);
     res.status(200).json({ message: "Logged out successfully" });
 }
 
