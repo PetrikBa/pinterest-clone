@@ -13,6 +13,7 @@ Full-stack Pinterest clone built with React (Vite) frontend and Node.js/Express 
 - TanStack Query
 - ImageKit
 - JSON Web Tokens
+- Zustand
 
 ## Project Structure
 

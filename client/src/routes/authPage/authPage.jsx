@@ -3,11 +3,14 @@ import Image from '../../components/imageComponent/imageComponent';
 import { useState } from 'react';
 import apiRequest from '../../utils/apiRequest';
 import { useNavigate } from 'react-router';
+import useAuthStore from '../../utils/authStore';
 
 const AuthPage = () => {
 
     const [isRegister, setIsRegister] = useState(false);
     const [error, setError] = useState("");
+
+    const { setCurrentUser } = useAuthStore();
 
     const navigate = useNavigate();
 
@@ -17,7 +20,11 @@ const AuthPage = () => {
         const data = Object.fromEntries(formData);
         
         try {
-            const res = await apiRequest.post(`/users/auth/${isRegister ? 'register' : 'login'}`, data);
+            const res = await apiRequest.post(
+                `/users/auth/${isRegister ? 'register' : 'login'}`, 
+                data
+            );
+            setCurrentUser(res.data);
             navigate('/');
         } catch (error) {
             setError(error?.response?.data?.message || error?.message || 'Registration failed');

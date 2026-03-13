@@ -7,6 +7,7 @@ import commentRouter from './routes/comment.routes.js'
 import connectDB from './utils/connectDB.js'
 import cors from 'cors';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -31,6 +32,7 @@ const corsOptions = {
 
 app.use(express.json());
 app.use(cors(corsOptions));
+app.use(cookieParser());
 
 app.get('/health', (_req, res) => {
     const dbConnected = mongoose.connection.readyState === 1;
