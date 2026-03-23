@@ -6,6 +6,7 @@ import Boards from '../../components/boards/boards';
 import { useQuery } from '@tanstack/react-query';
 import apiRequest from '../../utils/apiRequest';
 import { useParams } from 'react-router';
+import FollowButton from './followButton';
 
 const ProfilePage = () => {
 
@@ -40,7 +41,7 @@ const ProfilePage = () => {
                 <Image path="general/share.svg" alt="Some description"/>
                 <div className='profileButtons'>
                     <button>Message</button>
-                    <button>{data.isFollowing ? "Unfollow" : "Follow"}</button>
+                    <FollowButton isFollowing={data.isFollowing} userName={data.userName}/>
                 </div>
                 <Image path="general/more.svg" alt="Some description"/>
             </div>

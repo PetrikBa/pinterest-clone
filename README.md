@@ -76,3 +76,4 @@ Client is deployed automatically from `main` via GitHub Actions workflow:
 
 Live URL:
 - https://petrikba.github.io/pinterest-clone/
+- Please wait for the Render.com services to initialize during the first launch.

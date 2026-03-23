@@ -136,29 +136,35 @@ export const getUser = async (req,res) => {
 }
 
 export const followUser = async (req,res) => { 
-    
-    const {userName} = req.params;
+    try {
+        const { username } = req.params;
 
-    const user = await User.findOne({userName});
+        const user = await User.findOne({ userName: username });
 
-    const isFollowing = await Follow.exists({ 
-        follower: req.userId, 
-        following: user._id 
-    });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
-    if(isFollowing) {
-        await Follow.deleteOne({ 
+        const isFollowing = await Follow.exists({ 
             follower: req.userId, 
             following: user._id 
         });
-    } else {
-        await Follow.create({ 
-            follower: req.userId, 
-            following: user._id 
-        });
+
+        if (isFollowing) {
+            await Follow.deleteOne({ 
+                follower: req.userId, 
+                following: user._id 
+            });
+        } else {
+            await Follow.create({ 
+                follower: req.userId, 
+                following: user._id 
+            });
+        }
+
+        res.status(200).json("Successfully toggled follow status");
+    } catch (err) {
+        console.error('followUser error:', err);
+        res.status(500).json({ message: err.message });
     }
-
-    const {hashedPassword, ...detailsWithoutPassword} = user.toObject();
-
-    res.status(200).json("Successfully toggled follow status");    
 }
