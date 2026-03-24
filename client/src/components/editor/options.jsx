@@ -68,9 +68,51 @@ const landscapeSizes = [
   },
 ];
 
-const Options = () => {
-    const {selectedLayer,textOptions, setTextOptions, canvasOptions, setCanvasOptions} = useEditorStore();
+const Options = ({ previewImg }) => {
+    const {
+        selectedLayer,
+        textOptions, 
+        setTextOptions, 
+        canvasOptions, 
+        setCanvasOptions
+    } = useEditorStore();
+
     const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
+
+    const handleOrientationClick = (orientation) => {
+        const newHeight = orientation === 'portrait' 
+            ? (375 * previewImg.width) / previewImg.height 
+            : (375 * previewImg.height) / previewImg.width;
+
+            setCanvasOptions({
+                ...canvasOptions,
+                orientation,
+                height: newHeight,
+                size: 'original'
+            })
+    }
+
+    const handleSizeClick = (size) => {
+
+        let newHeight;
+
+        if(size === 'original') {
+            
+            if(canvasOptions.orientation === 'portrait') {
+                newHeight = (375 * previewImg.width) / previewImg.height;
+            } else {
+                newHeight = (375 * previewImg.height) / previewImg.width;
+            }
+        } else {
+            newHeight = (375 * size.height) / size.width;
+        }
+
+        setCanvasOptions({
+            ...canvasOptions,
+            size: size.name,
+            height: newHeight,
+        })
+    }
 
     return (
         <div className="options">{
@@ -107,23 +149,54 @@ const Options = () => {
                 ) : (
                     <div className="">
                         <div className="editingOption">
-                            <span>Orentation</span>
+                            <span>Orientation</span>
                             <div className="orientations">
-                                <div className="orientation">P</div>
-                                <div className="orientation">L</div>
+                                <div 
+                                    className={`orientation ${
+                                        canvasOptions.orientation === 'portrait' ? 'selected' : ''
+                                    }`}
+                                    onClick={()=>handleOrientationClick('portrait')}
+                                >
+                                    P
+                                </div>
+                                <div className={`orientation ${
+                                    canvasOptions.orientation === 'landscape' ? 'selected' : ''
+                                }`}
+                                onClick={()=>handleOrientationClick('landscape')}
+                                >
+                                    L
+                                </div>
                             </div>
                         </div>
                         <div className="editingOption">
                             <span>Sizes</span>
                             <div className="sizes">
-                                <div className="size">Original</div>
-                                {canvasOptions.orientation === 'portrait' ? (<>
+                                <div 
+                                    className={`size ${
+                                        canvasOptions.size === 'original' ? 'selected' : ''
+                                    }`}
+                                    onClick={()=>handleSizeClick('original')}
+                                >
+                                Original
+                                </div>
+                                {canvasOptions.orientation === 'portrait' ? (
+                                <>
                                     {portraitSizes.map(size => (
-                                        <div className="size" key={size.name}>{size.name}</div>
+                                        <div className={`size ${
+                                            canvasOptions.size === size.name ? 'selected' : ''
+                                        }`} 
+                                        key={size.name}
+                                        onClick={()=>handleSizeClick(size)}
+                                    >{size.name}</div>
                                     ))}
-                                </>) : ( <>
-                                     {landscapeSizes.map(size => (
-                                        <div className="size" key={size.name}>{size.name}</div>
+                                </>) : ( 
+                                    <>
+                                    {landscapeSizes.map(size => (
+                                        <div className={`size ${
+                                        canvasOptions.size === size.name ? 'selected' : ''
+                                    }`} key={size.name} 
+                                    onClick={()=>handleSizeClick(size)}
+                                    >{size.name}</div>
                                     ))}
                                 </>    
                                 )}

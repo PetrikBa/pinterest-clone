@@ -2,14 +2,19 @@ import './createPage.css';
 import IKIImage from '../../components/imageComponent/imageComponent';
 import useAuthStore from '../../utils/authStore';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import apiRequest from '../../utils/apiRequest';
 import Editor from '../../components/editor/editor';
+import useEditorStore from '../../utils/editorStore';
 
 const CreatePage = () => {
 
     const {currentUser} = useAuthStore();
 
     const navigate = useNavigate();
+
+    const formRef = useRef(null);
+    const {textOptions,canvasOptions} = useEditorStore();
 
     useEffect (() => {
         if(!currentUser) {
@@ -19,6 +24,7 @@ const CreatePage = () => {
 
     const [ file, setFile ] = useState(null);
     const [ isEditing, setIsEditing ] = useState(false);
+    const [ boards, setBoards ] = useState([]);
     const [ previewImg, setPreviewImg ] = useState({
         url: '',
         width: 0,
@@ -38,12 +44,40 @@ const CreatePage = () => {
         };
         }
     }, [file]);
+
+    useEffect(() => {
+        if (currentUser) {
+            apiRequest.get(`/boards/${currentUser._id}`)
+                .then(res => setBoards(res.data.boards || res.data))
+                .catch(() => {});
+        }
+    }, [currentUser]);
+
+
+    const handleSubmit = async () => {
+        if(isEditing) {
+            setIsEditing(false);
+        } else {
+            const formData = new FormData(formRef.current);
+            formData.append('media', file);
+            formData.append('textOptions', JSON.stringify(textOptions));  
+            formData.append('canvasOptions', JSON.stringify(canvasOptions)); 
+
+            try {
+                const res = await apiRequest.post('/pins', formData);
+                navigate(`/pin/${res.data._id}`);
+            } catch (error) {
+                console.error('Error submitting form:', error);
+            }
+        }
+    }
     
     return (
         <div className="createPage">
             <div className="createTop">
                 <h1>{isEditing ? "Edit Pin" : "Create Pin"}</h1>
-                <button>{isEditing ? "Done" : "Publish"}</button>
+                <button onClick={handleSubmit}>{isEditing ? "Done" : "Publish"}</button>
+
             </div>
             {isEditing ? (
                 <Editor previewImg={previewImg}/> 
@@ -75,7 +109,7 @@ const CreatePage = () => {
                         hidden
                         onChange={e=>setFile(e.target.files[0])} 
                     />
-                    <form action="" className="createForm">
+                    <form action="" className="createForm" ref={formRef}>
                         <div className="createFormItem">
                             <label htmlFor="title">Title</label>
                             <input 
@@ -106,10 +140,10 @@ const CreatePage = () => {
                         <div className="createFormItem">
                             <label htmlFor="board">Board</label>
                             <select id="board" name='board'>
-                                <option>Choose a board</option>
-                                <option value="board1">Board 1</option>
-                                <option value="board2">Board 2</option>
-                                <option value="board3">Board 3</option>
+                                <option value="">Choose a board</option>
+                                {boards.map(b => (
+                                    <option key={b._id} value={b._id}>{b.title}</option>
+                                ))}
                             </select>
                         </div>
                         <div className="createFormItem">

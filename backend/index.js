@@ -8,6 +8,7 @@ import connectDB from './utils/connectDB.js'
 import cors from 'cors';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import fileUpload from 'express-fileupload'
 
 const app = express();
 
@@ -33,6 +34,7 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 app.use(cookieParser());
+app.use(fileUpload());
 
 app.get('/health', (_req, res) => {
     const dbConnected = mongoose.connection.readyState === 1;
@@ -51,6 +53,4 @@ app.use('/comments', commentRouter);
 
 app.listen(port, ()=>{
     connectDB();
-    console.log('CORS allowed origins:', allowedOrigins);
-    console.log(`Server is running on http://localhost:${port}`);
 })

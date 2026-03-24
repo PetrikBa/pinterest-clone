@@ -10,7 +10,7 @@ const useEditorStore = create ((set) => ({
       left: 0
     },
     canvasOptions: {
-      heght: 0,
+      height: 0,
       orientation: '',
       size: 'original',
       backgroundColor: '#008080'   
