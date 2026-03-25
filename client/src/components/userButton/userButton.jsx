@@ -11,9 +11,12 @@ const UserButton = () => {
 
     const { currentUser, removeCurrentUser } = useAuthStore();
 
+    const closeMenu = () => setOpen(false);
+
     const handleLogout = async () => {
         try {
             await apiRequest.post('/users/auth/logout', {});
+            closeMenu();
             removeCurrentUser();
             navigate('/auth');
         } catch (err) {
@@ -32,8 +35,8 @@ const UserButton = () => {
                 />
             </div>
             {open && <div className="userOptions">
-                <Link to={`/profile/${currentUser.userName}`} className="userOption">Profile</Link>
-                <div className="userOption">Settings</div>
+                <Link to={`/${currentUser.userName}`} className="userOption" onClick={closeMenu}>Profile</Link>
+                <div className="userOption" onClick={closeMenu}>Settings</div>
                 <div className="userOption" onClick={handleLogout}>Logout</div>
             </div>}
         </div>
