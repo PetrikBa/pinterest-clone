@@ -67,7 +67,17 @@ const CreatePage = () => {
                 const res = await apiRequest.post('/pins', formData);
                 navigate(`/pin/${res.data._id}`);
             } catch (error) {
-                console.error('Error submitting form:', error);
+                console.error('Error submitting form:', {
+                    message: error?.message,
+                    status: error?.response?.status,
+                    statusText: error?.response?.statusText,
+                    responseData: error?.response?.data,
+                    requestUrl: error?.config?.url,
+                    requestMethod: error?.config?.method,
+                });
+
+                const sentPayload = Object.fromEntries(formData.entries());
+                console.log('Create pin payload:', sentPayload);
             }
         }
     }
