@@ -6,7 +6,7 @@ const followUser = async (userName) => {
     return res.data;
 }
 
-const FollowButton = ({ isFollowing, userName }) => {
+const FollowButton = ({ isFollowing, userName, disabled }) => {
 
     const queryClient = useQueryClient();
     
@@ -18,7 +18,10 @@ const FollowButton = ({ isFollowing, userName }) => {
     });
 
     return (
-        <button onClick={() => mutation.mutate(userName)} disabled={mutation.isPending}>
+        <button 
+            onClick={() => mutation.mutate(userName)} 
+            disabled={disabled || mutation.isPending}
+        >
             {isFollowing ? "Unfollow" : "Follow"}
         </button>
     )

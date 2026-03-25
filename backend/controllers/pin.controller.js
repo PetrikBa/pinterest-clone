@@ -12,23 +12,38 @@ export const getPins = async (req,res) => {
         const search = (req.query.search || '').trim();
         const userId = req.query.userId;
         const boardId = req.query.boardId;
+        const savedByUser = req.query.savedByUser;
         const LIMIT = 21;
-        const query = search
-            ? {
-                $or: [
-                    { title: { $regex: search, $options: 'i' } },
-                    { tags: { $regex: search, $options: 'i' } }
-                ]
-            }
-            : userId
-            ? { user: userId }
-            : boardId
-            ? { board: boardId }
-            : {};
+        
+        let pins;
 
-        const pins = await Pin.find(query)
-            .limit(LIMIT)
-            .skip(pageNumber * LIMIT);
+        if (savedByUser) {
+            // Get saved pins for a specific user
+            const savedPins = await Save.find({ user: savedByUser })
+                .populate('pin')
+                .limit(LIMIT)
+                .skip(pageNumber * LIMIT)
+                .sort({ createdAt: -1 });
+            
+            pins = savedPins.map(save => save.pin).filter(pin => pin !== null);
+        } else {
+            const query = search
+                ? {
+                    $or: [
+                        { title: { $regex: search, $options: 'i' } },
+                        { tags: { $regex: search, $options: 'i' } }
+                    ]
+                }
+                : userId
+                ? { user: userId }
+                : boardId
+                ? { board: boardId }
+                : {};
+
+            pins = await Pin.find(query)
+                .limit(LIMIT)
+                .skip(pageNumber * LIMIT);
+        }
 
         const hasNextPage = pins.length === LIMIT;
         

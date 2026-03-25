@@ -2,15 +2,16 @@ import './profilePage.css';
 import Image from '../../components/imageComponent/imageComponent';
 import { useState } from 'react';
 import Gallery from '../../components/gallery/gallery';
-import Boards from '../../components/boards/boards';
 import { useQuery } from '@tanstack/react-query';
 import apiRequest from '../../utils/apiRequest';
 import { useParams } from 'react-router';
 import FollowButton from './followButton';
+import useAuthStore from '../../utils/authStore';
 
 const ProfilePage = () => {
 
     const [type, setType] = useState("created");
+    const { currentUser } = useAuthStore();
 
     const {userName} = useParams();
 
@@ -41,7 +42,10 @@ const ProfilePage = () => {
                 <Image path="general/share.svg" alt="Some description"/>
                 <div className='profileButtons'>
                     <button>Message</button>
-                    <FollowButton isFollowing={data.isFollowing} userName={data.userName}/>
+                    <FollowButton 
+                        {...(currentUser?.userName === userName ? {disabled: true} : {})}
+                        isFollowing={data.isFollowing} 
+                        userName={data.userName}/>
                 </div>
                 <Image path="general/more.svg" alt="Some description"/>
             </div>
@@ -49,7 +53,7 @@ const ProfilePage = () => {
                 <span onClick={() => setType("created")} className={type==="created" ? "active" : ""}>Created</span>
                 <span onClick={() => setType("saved")} className={type==="saved" ? "active" : ""}>Saved</span>
             </div>
-            {type ==="created" ? <Gallery userId ={data._id} /> : <Boards userId ={data._id}/>}
+            {type ==="created" ? <Gallery userId ={data._id} /> : <Gallery savedByUser={data._id}/>}
         </div>
     );
 }

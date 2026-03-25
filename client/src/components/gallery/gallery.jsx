@@ -5,30 +5,31 @@ import axios from 'axios';
 import GalleryItem from '../galleryItem/galleryItem.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
-const fetchPins = async ({ pageParam, search, userId, boardId }) => {
+const fetchPins = async ({ pageParam, search, userId, boardId, savedByUser }) => {
     const res = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}/pins`, {
         params: {
             cursor: pageParam,
             search: (search || '').trim(),
             userId: (userId || '').trim(),
             boardId: (boardId || '').trim(),
+            savedByUser: (savedByUser || '').trim(),
         },
     });
     return res.data;
 }
 
-const Gallery = ({search, userId, boardId}) => {
+const Gallery = ({search, userId, boardId, savedByUser}) => {
     
     const {data, fetchNextPage, hasNextPage, status, isFetchingNextPage} = useInfiniteQuery({ 
-        queryKey: ['pins', search, userId, boardId], 
-        queryFn: ({ pageParam =0 }) => fetchPins({ pageParam, search, userId, boardId }),
+        queryKey: ['pins', search, userId, boardId, savedByUser], 
+        queryFn: ({ pageParam =0 }) => fetchPins({ pageParam, search, userId, boardId, savedByUser }),
         initialPageParam: 0,
         getNextPageParam: (lastPage, pages) => lastPage.nextCursor, 
     });
 
     const allPins = data?.pages.flatMap((page) => page.pins) || [];
 
-    // Auto-fetch more content if there are too few pins initially
+    // Auto-fetch more content if there are too few pins initially due to lazy loading issues
     useEffect(() => {
         if (allPins.length < 42 && hasNextPage && !isFetchingNextPage) {
             setTimeout(() => {
