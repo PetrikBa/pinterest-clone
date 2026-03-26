@@ -1,5 +1,9 @@
 # Pinterest Clone
 
+Live URL:
+- https://petrikba.github.io/pinterest-clone/
+- Please wait for the Render.com services to initialize during the first launch.
+
 Full-stack Pinterest clone built with React (Vite) frontend and Node.js/Express backend.
 
 ## Tech Stack
@@ -73,7 +77,3 @@ Client is deployed automatically from `main` via GitHub Actions workflow:
 1. Push changes to `main`
 2. Open `Actions` tab in GitHub repository
 3. Wait for `Deploy Client to GitHub Pages` workflow to finish
-
-Live URL:
-- https://petrikba.github.io/pinterest-clone/
-- Please wait for the Render.com services to initialize during the first launch.
