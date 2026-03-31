@@ -1,4 +1,4 @@
-# Pinterest Clone
+# Pinterest Clone - MERN
 
 Live URL:
 - https://petrikba.github.io/pinterest-clone/
