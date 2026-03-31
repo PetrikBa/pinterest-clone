@@ -3,6 +3,7 @@
 Live URL:
 - https://petrikba.github.io/pinterest-clone/
 - Please wait for the Render.com services to initialize during the first launch.
+- Login: petrik.baca@gmail.com; Pass: test
 
 Full-stack Pinterest clone built with React (Vite) frontend and Node.js/Express backend.
 
